@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import de.ypsilon.quizzy.QuizzyBackend;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -21,8 +22,6 @@ import java.util.List;
  */
 public class DatabaseManager {
 
-    private static DatabaseManager instance;
-
     private final CodecRegistry codecRegistry;
     private final MongoClient client;
     private final MongoDatabase database;
@@ -31,8 +30,6 @@ public class DatabaseManager {
      * Generate a new database instance.
      */
     public DatabaseManager() {
-        instance = this;
-
         // get all required env variables
         String hostName = System.getenv("mongo.host");
         int port = Integer.parseInt(System.getenv("mongo.port"));
@@ -64,7 +61,7 @@ public class DatabaseManager {
     }
 
     public static DatabaseManager getInstance() {
-        return instance;
+        return QuizzyBackend.getQuizzyBackend().getDatabaseManager();
     }
 
     /**
