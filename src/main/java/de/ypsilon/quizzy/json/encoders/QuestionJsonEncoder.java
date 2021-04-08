@@ -1,6 +1,6 @@
 package de.ypsilon.quizzy.json.encoders;
 
-import de.ypsilon.quizzy.dataset.Question;
+import de.ypsilon.quizzy.dataset.question.Question;
 import de.ypsilon.quizzy.json.JsonEncoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +20,7 @@ public class QuestionJsonEncoder implements JsonEncoder<Question> {
     public JSONObject encode(Question data) {
         JSONObject json = new JSONObject();
 
-        json.put(QUESTION, data.getQuestion());
+        json.put(QUESTION, data.getQuestionString());
         json.put(CORRECT_ANSWER, data.getCorrectAnswer());
 
         JSONArray wrongAnswers = new JSONArray();

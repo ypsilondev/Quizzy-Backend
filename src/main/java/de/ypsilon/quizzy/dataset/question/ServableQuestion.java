@@ -1,4 +1,4 @@
-package de.ypsilon.quizzy.dataset;
+package de.ypsilon.quizzy.dataset.question;
 
 import java.util.ArrayList;
 import java.util.Collection;

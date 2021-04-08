@@ -11,6 +11,8 @@ import io.javalin.http.HandlerType;
  */
 public interface Route extends Handler {
 
+    static String ERROR_IN_REQUEST = "There is at least one error in your request!";
+
     /**
      * Get the path for the route. E.g. /users
      *

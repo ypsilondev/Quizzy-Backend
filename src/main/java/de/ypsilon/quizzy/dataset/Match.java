@@ -1,5 +1,7 @@
 package de.ypsilon.quizzy.dataset;
 
+import de.ypsilon.quizzy.dataset.question.QuestionCategory;
+
 import java.util.List;
 
 /**

@@ -1,4 +1,4 @@
-package de.ypsilon.quizzy.dataset;
+package de.ypsilon.quizzy.dataset.question;
 
 /**
  * This (boilerplate) class models different categories for questions (e.g. different topics or subjects)

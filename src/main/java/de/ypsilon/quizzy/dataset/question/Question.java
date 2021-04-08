@@ -1,7 +1,8 @@
-package de.ypsilon.quizzy.dataset;
+package de.ypsilon.quizzy.dataset.question;
 
 import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Question {
     private final String question;
     private final String correctAnswer;
     private final List<String> wrongAnswers;
+    private final List<ObjectId> images;
 
     /**
      * Creates a question with all attributes
@@ -25,7 +27,7 @@ public class Question {
      * @param correctAnswer the correct answer to the question
      * @param wrongAnswers the wrong answers to the question
      */
-    public Question(ObjectId id, ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers) {
+    public Question(ObjectId id, ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images) {
         this.id = id;
         if(wrongAnswers.size() != ANSWER_COUNT - 1) {
             throw new IllegalArgumentException(String.format("A question has exactly %d possible wrong answers.", ANSWER_COUNT));
@@ -34,7 +36,19 @@ public class Question {
         this.question = question;
         this.correctAnswer = correctAnswer;
         this.wrongAnswers = wrongAnswers;
-        // TODO FIXME  Find the correct id by db-lookup
+        this.images = images;
+    }
+
+    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images) {
+        this(new ObjectId(), questionCategory, question, correctAnswer, wrongAnswers, images);
+    }
+
+    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers) {
+        this(questionCategory, question, correctAnswer, wrongAnswers, new ArrayList<>());
+    }
+
+    public void save() {
+        QuestionController.getInstance().saveQuestion(this);
     }
 
     /**
@@ -66,7 +80,7 @@ public class Question {
      * Getter for the question-text
      * @return the question text
      */
-    public String getQuestion() {
+    public String getQuestionString() {
         return question;
     }
 
@@ -80,10 +94,13 @@ public class Question {
 
     /**
      * Getter for a {@link Collection} containing all the wrong answers to the question
-     * @return the wrong anwers
+     * @return the wrong answers
      */
     public Collection<String> getWrongAnswers() {
         return wrongAnswers;
     }
 
+    public List<ObjectId> getImages() {
+        return images;
+    }
 }

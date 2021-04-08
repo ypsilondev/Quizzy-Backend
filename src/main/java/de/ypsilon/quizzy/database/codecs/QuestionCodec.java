@@ -1,7 +1,7 @@
 package de.ypsilon.quizzy.database.codecs;
 
 import de.ypsilon.quizzy.util.DatabaseUtil;
-import de.ypsilon.quizzy.dataset.Question;
+import de.ypsilon.quizzy.dataset.question.Question;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
@@ -13,11 +13,12 @@ import java.util.List;
 
 public class QuestionCodec implements Codec<Question> {
 
-    private static final String ID_KEY = "_id";
-    private static final String QUESTION_CATEGORY_KEY = "";
-    private static final String QUESTION_KEY = "";
-    private static final String CORRECT_ANSWER_KEY = "";
-    private static final String WRONG_ANSWERS_KEY = "";
+    public static final String ID_KEY = "_id";
+    private static final String QUESTION_CATEGORY_KEY = "questionCategory";
+    private static final String QUESTION_KEY = "question";
+    private static final String CORRECT_ANSWER_KEY = "correctAnswer";
+    private static final String WRONG_ANSWERS_KEY = "wrongAnswers";
+    private static final String IMAGES_KEY = "images";
 
     @Override
     public Question decode(BsonReader reader, DecoderContext decoderContext) {
@@ -28,10 +29,10 @@ public class QuestionCodec implements Codec<Question> {
         String question = reader.readString(QUESTION_KEY);
         String correctAnswer = reader.readString(CORRECT_ANSWER_KEY);
         List<String> wrongAnswers = DatabaseUtil.readArray(reader, decoderContext, String.class);
-
+        List<ObjectId> images = DatabaseUtil.readArray(reader, decoderContext, ObjectId.class);
         reader.readEndDocument();
 
-        return new Question(id, questionCategory, question, correctAnswer, wrongAnswers);
+        return new Question(id, questionCategory, question, correctAnswer, wrongAnswers, images);
     }
 
     @Override
@@ -40,9 +41,10 @@ public class QuestionCodec implements Codec<Question> {
 
         writer.writeObjectId(ID_KEY, question.getIdentity());
         writer.writeObjectId(QUESTION_CATEGORY_KEY, question.getQuestionCategoryIdentity());
-        writer.writeString(QUESTION_KEY, question.getQuestion());
+        writer.writeString(QUESTION_KEY, question.getQuestionString());
         writer.writeString(CORRECT_ANSWER_KEY, question.getCorrectAnswer());
         DatabaseUtil.writeArray(writer, encoderContext, WRONG_ANSWERS_KEY, question.getWrongAnswers(), String.class);
+        DatabaseUtil.writeArray(writer, encoderContext, IMAGES_KEY, question.getImages(), ObjectId.class);
 
         writer.writeEndDocument();
     }
