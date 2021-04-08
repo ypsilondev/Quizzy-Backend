@@ -13,7 +13,7 @@ public class UserCodec implements Codec<User> {
 
     public static final String ID_KEY = "_id";
     public static final String DISPLAY_NAME_KEY = "displayName";
-    private static final String EMAIL_KEY = "email";
+    public static final String EMAIL_KEY = "email";
     private static final String SCORE_KEY = "totalScore";
     private static final String PERMISSION_KEY = "permissions";
     private static final String VERIFIED_KEY = "verified";

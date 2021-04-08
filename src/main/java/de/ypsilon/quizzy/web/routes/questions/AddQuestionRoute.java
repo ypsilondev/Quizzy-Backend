@@ -1,8 +1,6 @@
-package de.ypsilon.quizzy.web.routes;
+package de.ypsilon.quizzy.web.routes.questions;
 
-import de.ypsilon.quizzy.dataset.question.ServableQuestion;
 import de.ypsilon.quizzy.dataset.question.Question;
-import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -10,9 +8,7 @@ import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class AddQuestionRoute implements Route {
 
@@ -39,16 +35,12 @@ public class AddQuestionRoute implements Route {
             List<ObjectId> images = new ArrayList<>();
             imagesIds.forEach(imageId -> images.add(new ObjectId(imageId)));
             Question question = new Question(questionCategory, questionString, correctAnswer, wrongAnswers, images);
-            ServableQuestion sq = new ServableQuestion(question);
+
             context.html(SUCCESS_JSON);
             question.save();
         } else {
-            context.html(ERROR_IN_REQUEST);
+            failRequest(context);
+            return;
         }
-    }
-
-    private boolean allNotNull(Object... objs) {
-        Arrays.stream(objs).forEach(System.out::println);
-        return Arrays.stream(objs).allMatch(Objects::nonNull);
     }
 }

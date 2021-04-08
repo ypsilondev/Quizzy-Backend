@@ -1,7 +1,9 @@
 package de.ypsilon.quizzy.web;
 
 import de.ypsilon.quizzy.QuizzyBackend;
-import de.ypsilon.quizzy.web.routes.AddQuestionRoute;
+import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
+import de.ypsilon.quizzy.web.routes.users.AuthenticateUser;
+import de.ypsilon.quizzy.web.routes.users.RegisterUser;
 import io.javalin.Javalin;
 
 import java.util.Collection;
@@ -46,6 +48,8 @@ public class WebManager {
         List<Route> routes = new LinkedList<>();
 
         routes.add(new AddQuestionRoute());
+        routes.add(new RegisterUser());
+        routes.add(new AuthenticateUser());
 
         return routes;
     }
