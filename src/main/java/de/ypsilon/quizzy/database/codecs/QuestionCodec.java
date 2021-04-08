@@ -1,70 +1,54 @@
 package de.ypsilon.quizzy.database.codecs;
 
+import de.ypsilon.quizzy.util.DatabaseUtil;
+import de.ypsilon.quizzy.dataset.Question;
 import org.bson.BsonReader;
-import org.bson.BsonType;
 import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionCodec implements Codec<QuestionCodec> {
+public class QuestionCodec implements Codec<Question> {
 
-    public static final QuestionCodec EMPTY_CODEC = new QuestionCodec(null, null, null, null, null);
-
-    private final ObjectId _id;
-    private final String question;
-    private final String correctAnswer;
-    private final List<String> wrongAnswers;
-    private final String questionCategoryUuid;
-
-    public QuestionCodec(ObjectId _id, String question, String correctAnswer, List<String> wrongAnswers, String questionCategoryUuid) {
-        this._id = _id;
-        this.question = question;
-        this.correctAnswer = correctAnswer;
-        this.wrongAnswers = wrongAnswers;
-        this.questionCategoryUuid = questionCategoryUuid;
-    }
+    private static final String ID_KEY = "_id";
+    private static final String QUESTION_CATEGORY_KEY = "";
+    private static final String QUESTION_KEY = "";
+    private static final String CORRECT_ANSWER_KEY = "";
+    private static final String WRONG_ANSWERS_KEY = "";
 
     @Override
-    public QuestionCodec decode(BsonReader reader, DecoderContext decoderContext) {
+    public Question decode(BsonReader reader, DecoderContext decoderContext) {
         reader.readStartDocument();
 
-        ObjectId _id = reader.readObjectId("_id");
-        String question = reader.readString("question");
-        String correctAnswer = reader.readString("correctAnswer");
-        reader.readName("wrongAnswers");
-        reader.readStartArray();
-        List<String> wrongAnswers = new ArrayList<>();
-        while(reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            wrongAnswers.add(reader.readString());
-        }
-        reader.readEndArray();
-        String questionCategoryUuid = reader.readString("questionCategoryUuid");
+        ObjectId id = reader.readObjectId(ID_KEY);
+        ObjectId questionCategory = reader.readObjectId(QUESTION_CATEGORY_KEY);
+        String question = reader.readString(QUESTION_KEY);
+        String correctAnswer = reader.readString(CORRECT_ANSWER_KEY);
+        List<String> wrongAnswers = DatabaseUtil.readArray(reader, decoderContext, String.class);
+
         reader.readEndDocument();
-        return new QuestionCodec(_id, question, correctAnswer, wrongAnswers, questionCategoryUuid);
+
+        return new Question(id, questionCategory, question, correctAnswer, wrongAnswers);
     }
 
     @Override
-    public void encode(BsonWriter writer, QuestionCodec questionCodec, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, Question question, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeObjectId("_id", this._id);
-        writer.writeString("question", this.question);
-        writer.writeString("correctAnswer", this.correctAnswer);
 
-        writer.writeStartArray("wrongAnswers");
-        wrongAnswers.forEach(writer::writeString);
-        writer.writeEndArray();
+        writer.writeObjectId(ID_KEY, question.getIdentity());
+        writer.writeObjectId(QUESTION_CATEGORY_KEY, question.getQuestionCategoryIdentity());
+        writer.writeString(QUESTION_KEY, question.getQuestion());
+        writer.writeString(CORRECT_ANSWER_KEY, question.getCorrectAnswer());
+        DatabaseUtil.writeArray(writer, encoderContext, WRONG_ANSWERS_KEY, question.getWrongAnswers(), String.class);
 
-        writer.writeString("questionCategoryUuid", this.questionCategoryUuid);
         writer.writeEndDocument();
     }
 
     @Override
-    public Class<QuestionCodec> getEncoderClass() {
-        return QuestionCodec.class;
+    public Class<Question> getEncoderClass() {
+        return Question.class;
     }
 }

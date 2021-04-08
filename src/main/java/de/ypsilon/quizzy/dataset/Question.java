@@ -2,7 +2,6 @@ package de.ypsilon.quizzy.dataset;
 
 import org.bson.types.ObjectId;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,12 +12,11 @@ public class Question {
 
     static final int ANSWER_COUNT = 4;
 
-    private final QuestionCategory questionCategory;
+    private final ObjectId id;
+    private final ObjectId questionCategory;
     private final String question;
     private final String correctAnswer;
     private final List<String> wrongAnswers;
-
-    private final ObjectId questionId;
 
     /**
      * Creates a question with all attributes
@@ -27,16 +25,41 @@ public class Question {
      * @param correctAnswer the correct answer to the question
      * @param wrongAnswers the wrong answers to the question
      */
-    public Question(QuestionCategory questionCategory, String question, String correctAnswer, String... wrongAnswers) {
-        if(wrongAnswers.length != ANSWER_COUNT - 1) {
+    public Question(ObjectId id, ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers) {
+        this.id = id;
+        if(wrongAnswers.size() != ANSWER_COUNT - 1) {
             throw new IllegalArgumentException(String.format("A question has exactly %d possible wrong answers.", ANSWER_COUNT));
         }
         this.questionCategory = questionCategory;
         this.question = question;
         this.correctAnswer = correctAnswer;
-        this.wrongAnswers = Arrays.asList(wrongAnswers);
+        this.wrongAnswers = wrongAnswers;
         // TODO FIXME  Find the correct id by db-lookup
-        this.questionId = new ObjectId();
+    }
+
+    /**
+     * Get the {@link ObjectId} from the question in the database.
+     * @return a {@link ObjectId}.
+     */
+    public ObjectId getIdentity() {
+        return id;
+    }
+
+    /**
+     * Get the {@link ObjectId} from the {@link QuestionCategory} that the question is located in.
+     * @return a {@link ObjectId}
+     */
+    public ObjectId getQuestionCategoryIdentity() {
+        return questionCategory;
+    }
+
+    /**
+     * Fetch the Question category from the database.
+     * @return a {@link QuestionCategory}
+     */
+    public QuestionCategory getQuestionCategory() {
+        //TODO get the question category
+        return null;
     }
 
     /**
@@ -63,11 +86,4 @@ public class Question {
         return wrongAnswers;
     }
 
-    /**
-     * Getter for the question's {@link java.util.UUID}
-     * @return the uuid of the question
-     */
-    public ObjectId getQuestionId() {
-        return questionId;
-    }
 }

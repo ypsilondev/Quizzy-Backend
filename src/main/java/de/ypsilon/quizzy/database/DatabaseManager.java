@@ -21,6 +21,8 @@ import java.util.List;
  */
 public class DatabaseManager {
 
+    private static DatabaseManager instance;
+
     private final CodecRegistry codecRegistry;
     private final MongoClient client;
     private final MongoDatabase database;
@@ -29,6 +31,8 @@ public class DatabaseManager {
      * Generate a new database instance.
      */
     public DatabaseManager() {
+        instance = this;
+
         // get all required env variables
         String hostName = System.getenv("mongo.host");
         int port = Integer.parseInt(System.getenv("mongo.port"));
@@ -57,6 +61,10 @@ public class DatabaseManager {
         // register the client and set the default database
         this.client = MongoClients.create(settings);
         this.database = this.client.getDatabase(defaultDatabase);
+    }
+
+    public static DatabaseManager getInstance() {
+        return instance;
     }
 
     /**
