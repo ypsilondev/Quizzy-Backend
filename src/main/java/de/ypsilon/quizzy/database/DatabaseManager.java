@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import de.ypsilon.quizzy.QuizzyBackend;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -21,8 +22,6 @@ import java.util.List;
  */
 public class DatabaseManager {
 
-    private static DatabaseManager instance;
-
     private final CodecRegistry codecRegistry;
     private final MongoClient client;
     private final MongoDatabase database;
@@ -31,18 +30,14 @@ public class DatabaseManager {
      * Generate a new database instance.
      */
     public DatabaseManager() {
-        instance = this;
-
         // get all required env variables
         String hostName = System.getenv("mongo.host");
         int port = Integer.parseInt(System.getenv("mongo.port"));
+
         String username = System.getenv("mongo.username");
         String authDatabase = System.getenv("mongo.authDatabase");
         String password = System.getenv("mongo.password");
         String defaultDatabase = System.getenv("mongo.database");
-
-        // generate the credentials.
-        MongoCredential credential = MongoCredential.createCredential(username, authDatabase, password.toCharArray());
 
         // get all new codecs and the default codec
         CodecRegistry extraCodecs = CodecRegistries.fromCodecs(registerAdditionalCodecs());
@@ -52,11 +47,17 @@ public class DatabaseManager {
         this.codecRegistry = CodecRegistries.fromRegistries(defaultCodecRegistry, extraCodecs);
 
         // initialize the settings for the client
-        MongoClientSettings settings = MongoClientSettings.builder()
-                .credential(credential)
+        MongoClientSettings.Builder mongoClientBuilder = MongoClientSettings.builder()
                 .applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(hostName, port))))
-                .codecRegistry(this.codecRegistry)
-                .build();
+                .codecRegistry(this.codecRegistry);
+
+        if (username != null) {
+            // generate the credentials.
+            MongoCredential credential = MongoCredential.createCredential(username, authDatabase, password.toCharArray());
+            mongoClientBuilder.credential(credential);
+        }
+
+        MongoClientSettings settings = mongoClientBuilder.build();
 
         // register the client and set the default database
         this.client = MongoClients.create(settings);
@@ -64,7 +65,7 @@ public class DatabaseManager {
     }
 
     public static DatabaseManager getInstance() {
-        return instance;
+        return QuizzyBackend.getQuizzyBackend().getDatabaseManager();
     }
 
     /**

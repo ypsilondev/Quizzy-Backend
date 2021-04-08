@@ -1,13 +1,12 @@
 package de.ypsilon.quizzy.json;
 
+import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.json.encoders.QuestionJsonEncoder;
 import de.ypsilon.quizzy.json.encoders.ServableQuestionJsonEncoder;
 
 import java.util.*;
 
 public class JsonCodecManager {
-
-    private static JsonCodecManager instance;
 
     private final JsonCodecRegistry registry;
     private final JsonEncoderRegistry encoderRegistry;
@@ -16,7 +15,6 @@ public class JsonCodecManager {
      * Create a new JSONCodecManager instance and initialize the registry.
      */
     public JsonCodecManager() {
-        instance = this;
 
         this.registry = new JsonCodecRegistryImpl(getCodecs());
 
@@ -26,7 +24,7 @@ public class JsonCodecManager {
     }
 
     public static JsonCodecManager getInstance() {
-        return instance;
+        return QuizzyBackend.getQuizzyBackend().getJsonCodecManager();
     }
 
     /**
