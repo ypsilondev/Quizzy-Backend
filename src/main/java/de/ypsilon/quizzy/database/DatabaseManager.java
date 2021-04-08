@@ -7,6 +7,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import de.ypsilon.quizzy.QuizzyBackend;
+import de.ypsilon.quizzy.database.codecs.QuestionCodec;
+import de.ypsilon.quizzy.database.codecs.UserCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -75,7 +77,8 @@ public class DatabaseManager {
      */
     private List<Codec<?>> registerAdditionalCodecs() {
         List<Codec<?>> codecs = new LinkedList<>();
-
+        codecs.add(new QuestionCodec());
+        codecs.add(new UserCodec());
         return codecs;
     }
 

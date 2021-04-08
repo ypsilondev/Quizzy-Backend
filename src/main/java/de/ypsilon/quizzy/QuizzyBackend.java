@@ -2,6 +2,7 @@ package de.ypsilon.quizzy;
 
 import de.ypsilon.quizzy.data.MinioManager;
 import de.ypsilon.quizzy.database.DatabaseManager;
+import de.ypsilon.quizzy.dataset.question.QuestionController;
 import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.web.WebManager;
 import org.slf4j.Logger;
@@ -34,8 +35,9 @@ public class QuizzyBackend {
         initialized = true;
         this.jsonCodecManager = new JsonCodecManager();
         this.databaseManager = new DatabaseManager();
-        this.minioManager = new MinioManager();
+        // this.minioManager = new MinioManager();
         this.webmanager = new WebManager();
+        new QuestionController();
     }
 
     public WebManager getWebManager() {

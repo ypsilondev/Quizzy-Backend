@@ -40,8 +40,8 @@ public class AddQuestionRoute implements Route {
             imagesIds.forEach(imageId -> images.add(new ObjectId(imageId)));
             Question question = new Question(questionCategory, questionString, correctAnswer, wrongAnswers, images);
             ServableQuestion sq = new ServableQuestion(question);
-            context.html(JsonCodecManager.getInstance().getEncoder(ServableQuestion.class).encode(sq).toString());
-            // question.save();
+            context.html(SUCCESS_JSON);
+            question.save();
         } else {
             context.html(ERROR_IN_REQUEST);
         }
