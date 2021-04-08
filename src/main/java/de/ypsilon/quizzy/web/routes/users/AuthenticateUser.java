@@ -1,12 +1,18 @@
 package de.ypsilon.quizzy.web.routes.users;
 
-import de.ypsilon.quizzy.dataset.User;
+import de.ypsilon.quizzy.dataset.user.SessionToken;
+import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class AuthenticateUser implements Route {
+
+    private static final String SESSION_TOKEN_COOKIE_NAME = "session_token";
 
 
     @Override
@@ -38,6 +44,9 @@ public class AuthenticateUser implements Route {
             if (user.isValidPassword(cleartextPassword)) {
                 context.html(String.format(STATE_JSON, "state", "login"));
                 // TODO create user session etc...
+                if(context.cookie(SESSION_TOKEN_COOKIE_NAME) == null){
+                    context.cookie(SESSION_TOKEN_COOKIE_NAME, SessionToken.createAndSaveSessionToken(user).getTokenString(), 1717917367);
+                }
             } else {
                 context.html(String.format(STATE_JSON, "state", "fail"));
             }

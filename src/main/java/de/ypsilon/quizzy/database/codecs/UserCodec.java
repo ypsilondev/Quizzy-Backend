@@ -1,6 +1,6 @@
 package de.ypsilon.quizzy.database.codecs;
 
-import de.ypsilon.quizzy.dataset.User;
+import de.ypsilon.quizzy.dataset.user.User;
 import org.bson.BsonBinary;
 import org.bson.BsonReader;
 import org.bson.BsonWriter;

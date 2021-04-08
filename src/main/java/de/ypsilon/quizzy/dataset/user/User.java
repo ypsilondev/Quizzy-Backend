@@ -1,4 +1,4 @@
-package de.ypsilon.quizzy.dataset;
+package de.ypsilon.quizzy.dataset.user;
 
 import com.mongodb.client.MongoCollection;
 import de.ypsilon.quizzy.database.DatabaseManager;
@@ -89,7 +89,7 @@ public class User {
      * Saves a user to the database
      * @param user the user to be saved
      */
-    public static void saveUser(User user) {
+    private static void saveUser(User user) {
         getCollection().deleteMany(new Document(UserCodec.ID_KEY, user.getId()));
         getCollection().insertOne(user);
     }

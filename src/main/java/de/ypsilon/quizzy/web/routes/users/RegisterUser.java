@@ -1,6 +1,6 @@
 package de.ypsilon.quizzy.web.routes.users;
 
-import de.ypsilon.quizzy.dataset.User;
+import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.exception.UserCreationException;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;

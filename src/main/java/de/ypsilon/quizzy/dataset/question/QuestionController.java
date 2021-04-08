@@ -3,7 +3,7 @@ package de.ypsilon.quizzy.dataset.question;
 import com.mongodb.client.MongoCollection;
 import de.ypsilon.quizzy.database.DatabaseManager;
 import de.ypsilon.quizzy.database.codecs.QuestionCodec;
-import de.ypsilon.quizzy.dataset.User;
+import de.ypsilon.quizzy.dataset.user.User;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 

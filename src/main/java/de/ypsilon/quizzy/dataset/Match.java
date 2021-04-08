@@ -1,6 +1,7 @@
 package de.ypsilon.quizzy.dataset;
 
 import de.ypsilon.quizzy.dataset.question.QuestionCategory;
+import de.ypsilon.quizzy.dataset.user.User;
 
 import java.util.HashMap;
 import java.util.List;
