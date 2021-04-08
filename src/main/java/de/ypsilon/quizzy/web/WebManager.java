@@ -1,5 +1,6 @@
 package de.ypsilon.quizzy.web;
 
+import de.ypsilon.quizzy.QuizzyBackend;
 import io.javalin.Javalin;
 
 import java.util.Collection;
@@ -31,6 +32,7 @@ public class WebManager {
      * @param route the route to register.
      */
     private void registerRoute(Route route) {
+        QuizzyBackend.LOGGER.info(String.format("register %s route %s", route.getType().name(), route.getPath()));
         this.application.addHandler(route.getType(), route.getPath(), route);
     }
 
