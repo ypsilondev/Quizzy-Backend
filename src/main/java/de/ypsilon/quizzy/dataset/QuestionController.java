@@ -5,12 +5,17 @@ import java.util.UUID;
 
 public class QuestionController {
 
-    private HashMap<UUID, ServedQuestion> servedQuestions = new HashMap<>();
+    private final HashMap<UUID, ServableQuestion> servedQuestions = new HashMap<>();
 
-    public ServedQuestion serveQuestion(Question question, User user) {
-        ServedQuestion servedQuestion = new ServedQuestion(question);
+    public ServableQuestion serveQuestion(Question question, User user) {
+        ServableQuestion servedQuestion = new ServableQuestion(question);
         this.servedQuestions.put(servedQuestion.getReferenceId(), servedQuestion);
         return servedQuestion;
+    }
+
+    public Question getQuestionByUuid(UUID questionId) {
+        // TODO load question from DB
+        return null;
     }
 
 }
