@@ -1,6 +1,7 @@
 package de.ypsilon.quizzy.web;
 
 import de.ypsilon.quizzy.QuizzyBackend;
+import de.ypsilon.quizzy.util.EnvironmentVariableWrapper;
 import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
 import de.ypsilon.quizzy.web.routes.users.AuthenticateUser;
 import de.ypsilon.quizzy.web.routes.users.RegisterUser;
@@ -16,7 +17,8 @@ public class WebManager {
     private final Javalin application;
 
     public WebManager() {
-        this.port = Integer.parseInt(System.getenv("web.port"));
+        EnvironmentVariableWrapper evw = EnvironmentVariableWrapper.getInstance();
+        this.port = Integer.parseInt(evw.getenv("web.port"));
 
         // initialize JavaLin
         this.application = Javalin.create(config -> {

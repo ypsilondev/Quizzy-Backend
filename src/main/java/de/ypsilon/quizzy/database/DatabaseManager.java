@@ -8,7 +8,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.database.codecs.QuestionCodec;
+import de.ypsilon.quizzy.database.codecs.SessionTokenCodec;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
+import de.ypsilon.quizzy.util.EnvironmentVariableWrapper;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -33,13 +35,14 @@ public class DatabaseManager {
      */
     public DatabaseManager() {
         // get all required env variables
-        String hostName = System.getenv("mongo.host");
-        int port = Integer.parseInt(System.getenv("mongo.port"));
+        EnvironmentVariableWrapper evw = EnvironmentVariableWrapper.getInstance();
+        String hostName = evw.getenv("mongo.host");
+        int port = Integer.parseInt(evw.getenv("mongo.port"));
 
-        String username = System.getenv("mongo.username");
-        String authDatabase = System.getenv("mongo.authDatabase");
-        String password = System.getenv("mongo.password");
-        String defaultDatabase = System.getenv("mongo.database");
+        String username = evw.getenv("mongo.username");
+        String authDatabase = evw.getenv("mongo.authDatabase");
+        String password = evw.getenv("mongo.password");
+        String defaultDatabase = evw.getenv("mongo.database");
 
         // get all new codecs and the default codec
         CodecRegistry extraCodecs = CodecRegistries.fromCodecs(registerAdditionalCodecs());
@@ -79,6 +82,7 @@ public class DatabaseManager {
         List<Codec<?>> codecs = new LinkedList<>();
         codecs.add(new QuestionCodec());
         codecs.add(new UserCodec());
+        codecs.add(new SessionTokenCodec());
         return codecs;
     }
 

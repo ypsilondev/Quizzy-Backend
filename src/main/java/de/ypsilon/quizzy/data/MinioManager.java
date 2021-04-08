@@ -1,5 +1,6 @@
 package de.ypsilon.quizzy.data;
 
+import de.ypsilon.quizzy.util.EnvironmentVariableWrapper;
 import io.minio.MinioClient;
 
 /**
@@ -15,9 +16,10 @@ public class MinioManager {
      * Build the minio manager and initialize the connection to the minio database.
      */
     public MinioManager() {
-        String minioSecretKey = System.getenv("minio.key.secret");
-        String minioAccessKey = System.getenv("minio.key.access");
-        String minioEndpoint = System.getenv("minio.endpoint");
+        EnvironmentVariableWrapper evw = EnvironmentVariableWrapper.getInstance();
+        String minioSecretKey = evw.getenv("minio.key.secret");
+        String minioAccessKey = evw.getenv("minio.key.access");
+        String minioEndpoint = evw.getenv("minio.endpoint");
 
         this.client = MinioClient.builder()
                         .endpoint(minioEndpoint)
