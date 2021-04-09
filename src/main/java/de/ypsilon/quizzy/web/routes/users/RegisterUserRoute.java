@@ -1,9 +1,6 @@
 package de.ypsilon.quizzy.web.routes.users;
 
 import de.ypsilon.quizzy.dataset.user.User;
-import de.ypsilon.quizzy.exception.QuizzyWebException;
-import de.ypsilon.quizzy.exception.QuizzyWebIllegalArgumentException;
-import de.ypsilon.quizzy.exception.UserCreationException;
 import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
@@ -11,7 +8,8 @@ import io.javalin.http.HandlerType;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
-public class RegisterUser implements Route {
+public class RegisterUserRoute implements Route {
+
     @Override
     public String getPath() {
         return "/users/register";
@@ -30,6 +28,8 @@ public class RegisterUser implements Route {
         String profileImageId = context.formParam("profileImage");
 
         RouteUtil.requireAllNotNull(displayName, email, cleartextPassword, profileImageId);
-        User.createAndStoreUser(displayName, email, cleartextPassword, new ObjectId(profileImageId));
+        User user = User.createAndStoreUser(displayName, email, cleartextPassword, new ObjectId(profileImageId));
+        AuthenticateUserRoute.setSessionToken(context, user);
+        RouteUtil.sendSuccessMessage(context);
     }
 }

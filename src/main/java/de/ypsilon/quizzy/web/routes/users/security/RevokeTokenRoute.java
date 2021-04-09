@@ -8,10 +8,10 @@ import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 
-public class RevokeAllTokens implements Route {
+public class RevokeTokenRoute implements Route {
     @Override
     public String getPath() {
-        return "/users/security/revokeAllTokens";
+        return "/users/security/revokeToken";
     }
 
     @Override
@@ -22,7 +22,7 @@ public class RevokeAllTokens implements Route {
     @Override
     public void handle(@NotNull Context context) throws Exception {
         User user = RouteUtil.requireAuthenticatedUser(context);
-        SessionToken.revokeAllSessionTokens(user);
-        context.html(SUCCESS_JSON);
+        SessionToken.revokeSessionToken(RouteUtil.getSessionToken(context));
+        RouteUtil.sendSuccessMessage(context);
     }
 }

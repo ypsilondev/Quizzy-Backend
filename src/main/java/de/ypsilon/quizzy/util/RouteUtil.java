@@ -2,12 +2,11 @@ package de.ypsilon.quizzy.util;
 
 import de.ypsilon.quizzy.dataset.user.SessionToken;
 import de.ypsilon.quizzy.dataset.user.User;
-import de.ypsilon.quizzy.exception.QuizzyExcepton;
 import de.ypsilon.quizzy.exception.QuizzyWebException;
 import de.ypsilon.quizzy.exception.QuizzyWebIllegalArgumentException;
 import de.ypsilon.quizzy.exception.UserAuthenticationException;
 import de.ypsilon.quizzy.web.Route;
-import de.ypsilon.quizzy.web.routes.users.AuthenticateUser;
+import de.ypsilon.quizzy.web.routes.users.AuthenticateUserRoute;
 import io.javalin.http.Context;
 
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import java.util.Objects;
 public class RouteUtil {
 
     public static boolean requireAllNotNull(Object... objs) throws QuizzyWebIllegalArgumentException {
-        Arrays.stream(objs).forEach(System.out::println);
         if (Arrays.stream(objs).allMatch(Objects::nonNull)) {
             return true;
         } else {
@@ -31,7 +29,18 @@ public class RouteUtil {
 
     public static void failRequest(Context context, String cause) {
         context.html(getErrorJson(cause));
+        context.contentType("application/json");
         context.status(400);
+    }
+
+    public static void sendSuccessMessage(Context context) {
+        sendJsonMessage(context, Route.SUCCESS_JSON);
+        context.status(200);
+    }
+
+    public static void sendJsonMessage(Context context, String jsonString) {
+        context.html(jsonString);
+        context.contentType("application/json");
     }
 
     private static String getErrorJson(String cause) {
@@ -39,7 +48,7 @@ public class RouteUtil {
     }
 
     public static User requireAuthenticatedUser(Context context) throws QuizzyWebException {
-        String sessionToken = context.cookie(AuthenticateUser.SESSION_TOKEN_COOKIE_NAME);
+        String sessionToken = context.cookie(AuthenticateUserRoute.SESSION_TOKEN_COOKIE_NAME);
         if (sessionToken == null) {
             throw new UserAuthenticationException("No session-token found.");
         }
@@ -51,7 +60,7 @@ public class RouteUtil {
     }
 
     public static SessionToken getSessionToken(Context context) throws UserAuthenticationException {
-        String sessionToken = context.cookie(AuthenticateUser.SESSION_TOKEN_COOKIE_NAME);
+        String sessionToken = context.cookie(AuthenticateUserRoute.SESSION_TOKEN_COOKIE_NAME);
         if (sessionToken == null) {
             throw new UserAuthenticationException("No session-token found.");
         }

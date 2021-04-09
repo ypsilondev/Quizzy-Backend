@@ -36,7 +36,7 @@ public class VerificationCodeCodec implements Codec<VerificationCode> {
 
         writer.writeObjectId(ID_KEY, verificationCode.getId());
         writer.writeObjectId(USER_ID_KEY, verificationCode.getUserId());
-        writer.writeInt64(CREATED_AT_KEY, verificationCode.getCreatedAt().getTime());
+        writer.writeDateTime(CREATED_AT_KEY, verificationCode.getCreatedAt().getTime());
         writer.writeInt32(VERIFICATION_CODE_KEY, verificationCode.getVerificationNumber());
 
         writer.writeEndDocument();

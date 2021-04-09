@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AuthenticateUser implements Route {
+public class AuthenticateUserRoute implements Route {
 
     public static final String SESSION_TOKEN_COOKIE_NAME = "session_token";
 
@@ -46,14 +46,15 @@ public class AuthenticateUser implements Route {
             throw new UserAuthenticationException("Invalid credentials!");
         }
         if (user.isValidPassword(cleartextPassword)) {
-            context.html(String.format(STATE_JSON, "state", "login"));
-            // TODO create user session etc...
-            if (context.cookie(SESSION_TOKEN_COOKIE_NAME) == null) {
-                context.cookie(SESSION_TOKEN_COOKIE_NAME, SessionToken.createAndSaveSessionToken(user).getTokenString(), 1717917367);
-            }
+            RouteUtil.sendJsonMessage(context, String.format(STATE_JSON, "state", "login"));
+            setSessionToken(context, user);
         } else {
             throw new UserAuthenticationException("Invalid credentials!");
         }
 
+    }
+
+    static void setSessionToken(Context context, User user) {
+        context.cookie(SESSION_TOKEN_COOKIE_NAME, SessionToken.createAndSaveSessionToken(user).getTokenString(), 1717917367);
     }
 }

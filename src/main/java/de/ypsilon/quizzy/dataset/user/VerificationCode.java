@@ -3,6 +3,7 @@ package de.ypsilon.quizzy.dataset.user;
 import com.mongodb.client.MongoCollection;
 import de.ypsilon.quizzy.database.DatabaseManager;
 import de.ypsilon.quizzy.database.codecs.VerificationCodeCodec;
+import de.ypsilon.quizzy.exception.QuizzyWebException;
 import de.ypsilon.quizzy.exception.UserAuthenticationException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -33,7 +34,10 @@ public class VerificationCode {
         return vc;
     }
 
-    public static void verifyUser(User user, int verificationNumber) throws UserAuthenticationException {
+    public static void verifyUser(User user, int verificationNumber) throws QuizzyWebException {
+        if(user.isVerified()){
+            throw new QuizzyWebException("User ist already verified!");
+        }
         VerificationCode vc = getCollection().find(new Document(VerificationCodeCodec.USER_ID_KEY, user.getId())).filter(new Document(VerificationCodeCodec.VERIFICATION_CODE_KEY, verificationNumber)).first();
         if (vc == null) {
             throw new UserAuthenticationException("invalid verification-number for this user");
