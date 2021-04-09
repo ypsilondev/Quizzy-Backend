@@ -1,6 +1,7 @@
 package de.ypsilon.quizzy.dataset.user;
 
 import com.mongodb.client.MongoCollection;
+import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.database.DatabaseManager;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
 import de.ypsilon.quizzy.exception.UserCreationException;
@@ -20,16 +21,20 @@ public class User {
     private final ObjectId _id;
     private String displayName;
     private String email;
+    private ObjectId profileImage;
+    private int accountSettings;
     private int totalScore;
     private int permissions;
     private boolean verified;
     private byte[] hashedPassword;
     private final byte[] salt;
 
-    public User(ObjectId _id, String displayName, String email, int totalScore, int permissions, boolean verified, byte[] hashedPassword, byte[] salt) {
+    public User(ObjectId _id, String displayName, String email, ObjectId profileImage, int accountSettings, int totalScore, int permissions, boolean verified, byte[] hashedPassword, byte[] salt) {
         this._id = _id;
         this.displayName = displayName;
         this.email = email;
+        this.profileImage = profileImage;
+        this.accountSettings = accountSettings;
         this.totalScore = totalScore;
         this.permissions = permissions;
         this.hashedPassword = hashedPassword;
@@ -37,10 +42,11 @@ public class User {
         this.verified = verified;
     }
 
-    public static User createAndStoreUser(String displayName, String email, String cleartextPassword) throws UserCreationException {
+    public static User createAndStoreUser(String displayName, String email, String cleartextPassword, ObjectId profileImage) throws UserCreationException {
         if(getUserByDisplayName(displayName) != null || getUserByEmail(email) != null){
             throw new UserCreationException("A user with this email or displayName does already exist!");
         }
+        // TODO check whether the profile-image is present in file-system.
         byte[] salt;
         try{
             salt = CryptoUtil.generateSalt();
@@ -48,10 +54,22 @@ public class User {
             throw new UserCreationException("No salt could be generated!");
         }
 
-        User user = new User(new ObjectId(), displayName, email, 0, 0, false, null, salt);
+        User user = new User(new ObjectId(), displayName, email, profileImage, 0, 0, 0, false, null, salt);
         user.changePassword(cleartextPassword)
                 .save();
+        user.requestUserVerification();
         return user;
+    }
+
+    public void requestUserVerification() {
+        this.setVerified(false);
+
+        VerificationCode vc = VerificationCode.createVerificationCode(this);
+
+        //TODO send verification-code via email.
+        QuizzyBackend.LOGGER.info(String.format("%s (%s) got verification-code: %d", this.getDisplayName(), this.getEmail(), vc.getVerificationNumber()));
+
+        this.save();
     }
 
     public boolean isValidPassword(String cleartextPassword) {
@@ -191,7 +209,7 @@ public class User {
      */
     public User changeEmail(String email) {
         this.email = email;
-        this.verified = false;
+        this.requestUserVerification();
         return this;
     }
 
@@ -232,6 +250,16 @@ public class User {
      */
     public User changePassword(String cleartextPassword) {
         this.hashedPassword = CryptoUtil.hash(cleartextPassword.getBytes(), salt);
+        // TODO should we implement trusted devices? So no logoff on those will occur?
+        SessionToken.revokeAllSessionTokens(this);
         return this;
+    }
+
+    public ObjectId getProfileImage() {
+        return profileImage;
+    }
+
+    public int getAccountSettings() {
+        return accountSettings;
     }
 }

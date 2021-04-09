@@ -1,10 +1,14 @@
 package de.ypsilon.quizzy.web.routes.users;
 
 import de.ypsilon.quizzy.dataset.user.User;
+import de.ypsilon.quizzy.exception.QuizzyWebException;
+import de.ypsilon.quizzy.exception.QuizzyWebIllegalArgumentException;
 import de.ypsilon.quizzy.exception.UserCreationException;
+import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 
 public class RegisterUser implements Route {
@@ -23,16 +27,9 @@ public class RegisterUser implements Route {
         String displayName = context.formParam("displayName");
         String email = context.formParam("email");
         String cleartextPassword = context.formParam("password");
+        String profileImageId = context.formParam("profileImage");
 
-        if (allNotNull(displayName, email, cleartextPassword)) {
-            try {
-                User.createAndStoreUser(displayName, email, cleartextPassword);
-            } catch (UserCreationException e) {
-                context.html(String.format("{\"%s\":\"%s\"}", "error", e.getMessage()));
-            }
-        } else {
-            failRequest(context);
-            return;
-        }
+        RouteUtil.requireAllNotNull(displayName, email, cleartextPassword, profileImageId);
+        User.createAndStoreUser(displayName, email, cleartextPassword, new ObjectId(profileImageId));
     }
 }

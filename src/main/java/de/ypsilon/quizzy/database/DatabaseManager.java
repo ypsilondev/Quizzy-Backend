@@ -10,6 +10,7 @@ import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.database.codecs.QuestionCodec;
 import de.ypsilon.quizzy.database.codecs.SessionTokenCodec;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
+import de.ypsilon.quizzy.database.codecs.VerificationCodeCodec;
 import de.ypsilon.quizzy.util.EnvironmentVariableWrapper;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -83,6 +84,7 @@ public class DatabaseManager {
         codecs.add(new QuestionCodec());
         codecs.add(new UserCodec());
         codecs.add(new SessionTokenCodec());
+        codecs.add(new VerificationCodeCodec());
         return codecs;
     }
 
