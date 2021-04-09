@@ -72,6 +72,4 @@ public class SessionToken {
     public String getTokenString() {
         return sessionToken;
     }
-
-
 }

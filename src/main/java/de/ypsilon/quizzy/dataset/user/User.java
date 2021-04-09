@@ -43,14 +43,14 @@ public class User {
     }
 
     public static User createAndStoreUser(String displayName, String email, String cleartextPassword, ObjectId profileImage) throws UserCreationException {
-        if(getUserByDisplayName(displayName) != null || getUserByEmail(email) != null){
+        if (getUserByDisplayName(displayName) != null || getUserByEmail(email) != null) {
             throw new UserCreationException("A user with this email or displayName does already exist!");
         }
         // TODO check whether the profile-image is present in file-system.
         byte[] salt;
-        try{
+        try {
             salt = CryptoUtil.generateSalt();
-        } catch (NoSuchAlgorithmException | NoSuchProviderException e){
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new UserCreationException("No salt could be generated!");
         }
 
@@ -61,6 +61,9 @@ public class User {
         return user;
     }
 
+    /**
+     * Triggers the account-verification-process.
+     */
     public void requestUserVerification() {
         this.setVerified(false);
 
@@ -72,12 +75,18 @@ public class User {
         this.save();
     }
 
+    /**
+     * Checks, whether a supplied password is the user's password
+     * @param cleartextPassword the input password (in cleartext)
+     * @return true, if the password is correct, false if not
+     */
     public boolean isValidPassword(String cleartextPassword) {
         return Arrays.equals(CryptoUtil.hash(cleartextPassword.getBytes(), this.salt), this.hashedPassword);
     }
 
     /**
      * Loads a user by its user-id
+     *
      * @param _id the it to be searched
      * @return the user with the id or null
      */
@@ -87,6 +96,7 @@ public class User {
 
     /**
      * Loads a user by its display-name
+     *
      * @param displayName the display-name to be searched
      * @return the user with the display-name or null
      */
@@ -96,6 +106,7 @@ public class User {
 
     /**
      * Loads a user by its email-address
+     *
      * @param email the email to be searched
      * @return the user with the email or null
      */
@@ -105,6 +116,7 @@ public class User {
 
     /**
      * Saves a user to the database
+     *
      * @param user the user to be saved
      */
     private static void saveUser(User user) {
@@ -121,6 +133,7 @@ public class User {
 
     /**
      * Getter for the {@link MongoCollection} containing all users
+     *
      * @return the collection
      */
     private static MongoCollection<User> getCollection() {
@@ -130,6 +143,7 @@ public class User {
 
     /**
      * Getter for the {@link ObjectId} of the {@link User}
+     *
      * @return the {@link ObjectId}
      */
     public ObjectId getId() {
@@ -138,6 +152,7 @@ public class User {
 
     /**
      * Getter for the display name
+     *
      * @return the display name
      */
     public String getDisplayName() {
@@ -146,6 +161,7 @@ public class User {
 
     /**
      * Getter for the email
+     *
      * @return the email
      */
     public String getEmail() {
@@ -154,6 +170,7 @@ public class User {
 
     /**
      * Getter of the total score
+     *
      * @return the total score
      */
     public int getTotalScore() {
@@ -162,6 +179,7 @@ public class User {
 
     /**
      * Getter for the permissions of the user
+     *
      * @return the permissions of the user
      */
     public int getPermissions() {
@@ -170,6 +188,7 @@ public class User {
 
     /**
      * Getter for the account-verification of the user
+     *
      * @return true, if the account is verified, false if not
      */
     public boolean isVerified() {
@@ -178,6 +197,7 @@ public class User {
 
     /**
      * Getter for the hashed password
+     *
      * @return the hashed password
      */
     public byte[] getHashedPassword() {
@@ -186,6 +206,7 @@ public class User {
 
     /**
      * Getter for the salt
+     *
      * @return the salt
      */
     public byte[] getSalt() {
@@ -194,6 +215,7 @@ public class User {
 
     /**
      * Setter for the display name
+     *
      * @param displayName the new display name
      * @return this user
      */
@@ -204,6 +226,7 @@ public class User {
 
     /**
      * Setter for the email
+     *
      * @param email the new email
      * @return this user
      */
@@ -215,6 +238,7 @@ public class User {
 
     /**
      * Setter for the total score of the user
+     *
      * @param totalScore the new total score
      * @return this user
      */
@@ -223,8 +247,19 @@ public class User {
         return this;
     }
 
+    public User setAccountSettings(int accountSettings) {
+        this.accountSettings = accountSettings;
+        return this;
+    }
+
+    public User setProfileImage(ObjectId profileImage) {
+        this.profileImage = profileImage;
+        return this;
+    }
+
     /**
      * Setter for the permissions of the user
+     *
      * @param permissions the new permissions
      * @return this user
      */
@@ -235,6 +270,7 @@ public class User {
 
     /**
      * Setter for the user's account verification
+     *
      * @param verified the new verification-level
      * @return this user
      */
@@ -245,6 +281,7 @@ public class User {
 
     /**
      * Setter for the password of the user
+     *
      * @param cleartextPassword the new password (will be hashed)
      * @return this user
      */

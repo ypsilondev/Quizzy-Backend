@@ -21,6 +21,6 @@ public class LoginCheckRoute implements Route {
     @Override
     public void handle(@NotNull Context context) throws Exception {
         RouteUtil.requireAuthenticatedUser(context);
-        RouteUtil.sendJsonMessage(context, String.format(STATE_JSON, "state", "logged-in"));
+        RouteUtil.sendJsonMessage(context, String.format(RouteUtil.STATE_JSON, "state", "logged-in"));
     }
 }

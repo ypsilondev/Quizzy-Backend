@@ -38,7 +38,7 @@ public class AddQuestionRoute implements Route {
         imagesIds.forEach(imageId -> images.add(new ObjectId(imageId)));
         Question question = new Question(questionCategory, questionString, correctAnswer, wrongAnswers, images, RouteUtil.getInt(timeToAnswerString));
 
-        context.html(SUCCESS_JSON);
+        RouteUtil.sendSuccessMessage(context);
         question.save();
     }
 }

@@ -9,9 +9,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class AuthenticateUserRoute implements Route {
 
     public static final String SESSION_TOKEN_COOKIE_NAME = "session_token";
@@ -46,7 +43,7 @@ public class AuthenticateUserRoute implements Route {
             throw new UserAuthenticationException("Invalid credentials!");
         }
         if (user.isValidPassword(cleartextPassword)) {
-            RouteUtil.sendJsonMessage(context, String.format(STATE_JSON, "state", "login"));
+            RouteUtil.sendJsonMessage(context, String.format(RouteUtil.STATE_JSON, "state", "login"));
             setSessionToken(context, user);
         } else {
             throw new UserAuthenticationException("Invalid credentials!");
