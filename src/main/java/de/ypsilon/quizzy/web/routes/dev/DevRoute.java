@@ -1,0 +1,30 @@
+package de.ypsilon.quizzy.web.routes.dev;
+
+import de.ypsilon.quizzy.web.Route;
+import io.javalin.http.Context;
+import io.javalin.http.HandlerType;
+import org.jetbrains.annotations.NotNull;
+
+public class DevRoute implements Route {
+
+    private static final String ADD_ACCOUNT_FORM = "<h1>Register User:</h1><form target=\"_blank\" method=\"post\" action=\"/users/register\"> <input type=\"text\" name=\"displayName\" placeholder=\"User-Name\"> <input type=\"text\" name=\"email\" placeholder=\"E-Mail\"> <input type=\"text\" name=\"password\" placeholder=\"Password\"> <input type=\"text\" name=\"profileImage\" placeholder=\"Profile-Image-id\" value=\"606f801770402029ae887153\"> <input type=\"submit\"></form> <br />";
+    private static final String VERIFY_ACCOUNT_FORM = "<h1>Verify User:</h1> Note: you need to have a session cookie!<form target=\"_blank\" method=\"post\" action=\"/users/security/verify\"> <input type=\"text\" name=\"verificationNumber\" placeholder=\"Verification-Number\"> <input type=\"submit\" value=\"Verifiy!\"></form> <br />";
+    private static final String LOGIN_FORM = "<h1>Login User:</h1><form target=\"_blank\" method=\"post\" action=\"/users/authenticate\"> <input type=\"text\" name=\"displayName\" placeholder=\"User-Name\"> <input type=\"text\" name=\"email\" placeholder=\"E-Mail\"> <input type=\"text\" name=\"password\" placeholder=\"Password\"> <input type=\"submit\"></form>";
+    private static final String LOGIN_CHECK_FORM = "<h1>Check login-state</h1><form target=\"_blank\" method=\"get\" action=\"/users/logincheck\"> <input type=\"submit\" value=\"Check login state\"></form>";
+    private static final String REVOKE_TOKENS_FORM = "<h1>Revoke local session-token</h1><form target=\"_blank\" method=\"post\" action=\"/users/security/revokeToken\"> <input type=\"submit\" value=\"Revoke token\"></form><h1>Revoke all session-tokens</h1><form target=\"_blank\" method=\"post\" action=\"/users/security/revokeAllTokens\"> <input type=\"submit\" value=\"Revoke all tokens\"></form>";
+
+    @Override
+    public String getPath() {
+        return "/dev";
+    }
+
+    @Override
+    public HandlerType getType() {
+        return HandlerType.GET;
+    }
+
+    @Override
+    public void handle(@NotNull Context context) throws Exception {
+        context.html(ADD_ACCOUNT_FORM + VERIFY_ACCOUNT_FORM + LOGIN_FORM + LOGIN_CHECK_FORM + REVOKE_TOKENS_FORM);
+    }
+}

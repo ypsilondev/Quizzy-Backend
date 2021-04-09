@@ -4,12 +4,14 @@ import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.exception.QuizzyWebException;
 import de.ypsilon.quizzy.util.EnvironmentVariableWrapper;
 import de.ypsilon.quizzy.util.RouteUtil;
+import de.ypsilon.quizzy.web.routes.dev.DevRoute;
 import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
-import de.ypsilon.quizzy.web.routes.users.AuthenticateUser;
-import de.ypsilon.quizzy.web.routes.users.RegisterUser;
-import de.ypsilon.quizzy.web.routes.users.security.RevokeAllTokens;
-import de.ypsilon.quizzy.web.routes.users.security.RevokeToken;
-import de.ypsilon.quizzy.web.routes.users.security.VerifyUser;
+import de.ypsilon.quizzy.web.routes.users.AuthenticateUserRoute;
+import de.ypsilon.quizzy.web.routes.users.LoginCheckRoute;
+import de.ypsilon.quizzy.web.routes.users.RegisterUserRoute;
+import de.ypsilon.quizzy.web.routes.users.security.RevokeAllTokensRoute;
+import de.ypsilon.quizzy.web.routes.users.security.RevokeTokenRoute;
+import de.ypsilon.quizzy.web.routes.users.security.VerifyUserRoute;
 import io.javalin.Javalin;
 
 import java.util.Collection;
@@ -57,17 +59,22 @@ public class WebManager {
     private Collection<Route> getRoutes() {
         List<Route> routes = new LinkedList<>();
 
+        // DEV-ROUTES, only for debugging-use
+        // /dev
+        routes.add(new DevRoute());
+
         // /questions
         routes.add(new AddQuestionRoute());
 
         // /users
-        routes.add(new RegisterUser());
-        routes.add(new AuthenticateUser());
+        routes.add(new RegisterUserRoute());
+        routes.add(new AuthenticateUserRoute());
+        routes.add(new LoginCheckRoute());
 
         // /users/security
-        routes.add(new RevokeAllTokens());
-        routes.add(new RevokeToken());
-        routes.add(new VerifyUser());
+        routes.add(new RevokeAllTokensRoute());
+        routes.add(new RevokeTokenRoute());
+        routes.add(new VerifyUserRoute());
 
         return routes;
     }
