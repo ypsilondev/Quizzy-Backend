@@ -1,6 +1,7 @@
 package de.ypsilon.quizzy.web.routes.questions;
 
 import de.ypsilon.quizzy.dataset.question.Question;
+import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -29,18 +30,15 @@ public class AddQuestionRoute implements Route {
         String correctAnswer = context.formParam("correctAnswer");
         List<String> wrongAnswers = context.formParams("wrongAnswers");
         List<String> imagesIds = context.formParams("images");
+        String timeToAnswerString = context.formParam("timeToAnswer", "-1");
 
-        if (allNotNull(questionCategoryId, questionString, correctAnswer, wrongAnswers, imagesIds)) {
-            ObjectId questionCategory = new ObjectId(questionCategoryId);
-            List<ObjectId> images = new ArrayList<>();
-            imagesIds.forEach(imageId -> images.add(new ObjectId(imageId)));
-            Question question = new Question(questionCategory, questionString, correctAnswer, wrongAnswers, images);
+        RouteUtil.requireAllNotNull(questionCategoryId, questionString, correctAnswer, wrongAnswers, imagesIds);
+        ObjectId questionCategory = new ObjectId(questionCategoryId);
+        List<ObjectId> images = new ArrayList<>();
+        imagesIds.forEach(imageId -> images.add(new ObjectId(imageId)));
+        Question question = new Question(questionCategory, questionString, correctAnswer, wrongAnswers, images, RouteUtil.getInt(timeToAnswerString));
 
-            context.html(SUCCESS_JSON);
-            question.save();
-        } else {
-            failRequest(context);
-            return;
-        }
+        context.html(SUCCESS_JSON);
+        question.save();
     }
 }

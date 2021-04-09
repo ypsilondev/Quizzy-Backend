@@ -19,6 +19,7 @@ public class Question {
     private final String correctAnswer;
     private final List<String> wrongAnswers;
     private final List<ObjectId> images;
+    private final int timeToAnswer;
 
     /**
      * Creates a question with all attributes
@@ -27,7 +28,7 @@ public class Question {
      * @param correctAnswer the correct answer to the question
      * @param wrongAnswers the wrong answers to the question
      */
-    public Question(ObjectId id, ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images) {
+    public Question(ObjectId id, ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images, int timeToAnswer) {
         this.id = id;
         if(wrongAnswers.size() != ANSWER_COUNT - 1) {
             throw new IllegalArgumentException(String.format("A question has exactly %d possible wrong answers.", ANSWER_COUNT));
@@ -37,14 +38,15 @@ public class Question {
         this.correctAnswer = correctAnswer;
         this.wrongAnswers = wrongAnswers;
         this.images = images;
+        this.timeToAnswer = timeToAnswer;
     }
 
-    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images) {
-        this(new ObjectId(), questionCategory, question, correctAnswer, wrongAnswers, images);
+    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, List<ObjectId> images, int timeToAnswer) {
+        this(new ObjectId(), questionCategory, question, correctAnswer, wrongAnswers, images, timeToAnswer);
     }
 
-    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers) {
-        this(questionCategory, question, correctAnswer, wrongAnswers, new ArrayList<>());
+    public Question(ObjectId questionCategory, String question, String correctAnswer, List<String> wrongAnswers, int timeToAnswer) {
+        this(questionCategory, question, correctAnswer, wrongAnswers, new ArrayList<>(), timeToAnswer);
     }
 
     public void save() {
@@ -102,5 +104,9 @@ public class Question {
 
     public List<ObjectId> getImages() {
         return images;
+    }
+
+    public int getTimeToAnswer() {
+        return timeToAnswer;
     }
 }

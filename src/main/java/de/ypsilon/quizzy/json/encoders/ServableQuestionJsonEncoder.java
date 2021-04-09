@@ -11,7 +11,13 @@ public class ServableQuestionJsonEncoder implements JsonEncoder<ServableQuestion
     private static final String ANSWERS = "answers";
     private static final String IMAGES = "images";
     private static final String REFERENCE = "referenceId";
+    private static final String TIME_TO_ANSWER = "timeToAnswer";
 
+    /**
+     * Encode a object to the JSON value.
+     *
+     * @param data the object to encode.
+     */
     @Override
     public JSONObject encode(ServableQuestion data) {
         JSONObject json = new JSONObject();
@@ -28,9 +34,16 @@ public class ServableQuestionJsonEncoder implements JsonEncoder<ServableQuestion
 
         json.put(REFERENCE, data.getReferenceId().toString());
 
+        json.put(TIME_TO_ANSWER, data.getQuestion().getTimeToAnswer());
+
         return json;
     }
 
+    /**
+     * The class that is going to be encoded.
+     *
+     * @return a class.
+     */
     @Override
     public Class<ServableQuestion> getEncoderClass() {
         return ServableQuestion.class;

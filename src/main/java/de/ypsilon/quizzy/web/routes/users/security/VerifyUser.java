@@ -25,12 +25,7 @@ public class VerifyUser implements Route {
         User user = RouteUtil.requireAuthenticatedUser(context);
         String verificationNumberString = context.formParam("verificationNumber");
         RouteUtil.requireAllNotNull(verificationNumberString);
-        int verificationNumber;
-        try {
-            verificationNumber = Integer.parseInt(verificationNumberString);
-        } catch (NumberFormatException e) {
-            throw new QuizzyWebException("The provided number could not be parsed!");
-        }
+        int verificationNumber = RouteUtil.getInt(verificationNumberString);
         VerificationCode.verifyUser(user, verificationNumber);
     }
 }

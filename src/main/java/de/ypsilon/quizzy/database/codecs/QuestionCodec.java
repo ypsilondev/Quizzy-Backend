@@ -19,6 +19,7 @@ public class QuestionCodec implements Codec<Question> {
     private static final String CORRECT_ANSWER_KEY = "correctAnswer";
     private static final String WRONG_ANSWERS_KEY = "wrongAnswers";
     private static final String IMAGES_KEY = "images";
+    private static final String TIME_TO_ANSWER_KEY = "timeToAnswer";
 
     @Override
     public Question decode(BsonReader reader, DecoderContext decoderContext) {
@@ -30,9 +31,10 @@ public class QuestionCodec implements Codec<Question> {
         String correctAnswer = reader.readString(CORRECT_ANSWER_KEY);
         List<String> wrongAnswers = DatabaseUtil.readArray(reader, decoderContext, String.class);
         List<ObjectId> images = DatabaseUtil.readArray(reader, decoderContext, ObjectId.class);
-        reader.readEndDocument();
+        int timeToAnswer = reader.readInt32(TIME_TO_ANSWER_KEY);
 
-        return new Question(id, questionCategory, question, correctAnswer, wrongAnswers, images);
+        reader.readEndDocument();
+        return new Question(id, questionCategory, question, correctAnswer, wrongAnswers, images, timeToAnswer);
     }
 
     @Override
@@ -45,6 +47,7 @@ public class QuestionCodec implements Codec<Question> {
         writer.writeString(CORRECT_ANSWER_KEY, question.getCorrectAnswer());
         DatabaseUtil.writeArray(writer, encoderContext, WRONG_ANSWERS_KEY, question.getWrongAnswers(), String.class);
         DatabaseUtil.writeArray(writer, encoderContext, IMAGES_KEY, question.getImages(), ObjectId.class);
+        writer.writeInt32(TIME_TO_ANSWER_KEY, question.getTimeToAnswer());
 
         writer.writeEndDocument();
     }

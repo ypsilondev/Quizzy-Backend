@@ -17,9 +17,9 @@ public class RouteUtil {
 
     public static boolean requireAllNotNull(Object... objs) throws QuizzyWebIllegalArgumentException {
         Arrays.stream(objs).forEach(System.out::println);
-        if(Arrays.stream(objs).allMatch(Objects::nonNull)){
+        if (Arrays.stream(objs).allMatch(Objects::nonNull)) {
             return true;
-        }else{
+        } else {
             throw new QuizzyWebIllegalArgumentException();
         }
     }
@@ -34,7 +34,7 @@ public class RouteUtil {
         context.status(400);
     }
 
-    private static String getErrorJson(String cause){
+    private static String getErrorJson(String cause) {
         return String.format("{\"state\":\"fail\",\"cause\":\"%s\"}", cause);
     }
 
@@ -44,7 +44,7 @@ public class RouteUtil {
             throw new UserAuthenticationException("No session-token found.");
         }
         User user = SessionToken.retrieveUserFromSessionTokenString(sessionToken);
-        if(user == null){
+        if (user == null) {
             throw new UserAuthenticationException("Invalid, expired or revoked session-token.");
         }
         return user;
@@ -56,5 +56,13 @@ public class RouteUtil {
             throw new UserAuthenticationException("No session-token found.");
         }
         return SessionToken.getSessionTokenByString(sessionToken);
+    }
+
+    public static int getInt(String numberString) throws QuizzyWebException {
+        try {
+            return Integer.parseInt(numberString);
+        } catch (NumberFormatException e) {
+            throw new QuizzyWebException("The provided number could not be parsed!");
+        }
     }
 }
