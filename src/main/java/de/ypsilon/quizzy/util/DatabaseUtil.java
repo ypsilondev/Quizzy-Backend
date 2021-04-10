@@ -4,6 +4,7 @@ import de.ypsilon.quizzy.database.DatabaseManager;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -36,6 +37,10 @@ public class DatabaseUtil {
         }
 
         writer.writeEndArray();
+    }
+
+    public static Document buildEqualsIgnoreSearch(String key, String value) {
+        return new Document(key, new Document("$regex", value).append("$options", "i"));
     }
 
     private static <T> T readValue(BsonReader reader, DecoderContext context, Class<T> aClass) {

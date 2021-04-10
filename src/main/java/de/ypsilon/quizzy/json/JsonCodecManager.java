@@ -3,6 +3,7 @@ package de.ypsilon.quizzy.json;
 import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.json.encoders.QuestionJsonEncoder;
 import de.ypsilon.quizzy.json.encoders.ServableQuestionJsonEncoder;
+import de.ypsilon.quizzy.json.encoders.UserJsonEncoder;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class JsonCodecManager {
      * Get the codec from a class or null if the class has no codec.
      *
      * @param aClass the class to search the codec for.
-     * @param <T> the codec type.
+     * @param <T>    the codec type.
      * @return a JsonCodec or null.
      */
     public <T> JsonCodec<T> getCodec(Class<T> aClass) {
@@ -63,6 +64,7 @@ public class JsonCodecManager {
 
         encoders.add(new QuestionJsonEncoder());
         encoders.add(new ServableQuestionJsonEncoder());
+        encoders.add(new UserJsonEncoder());
 
         return encoders;
     }

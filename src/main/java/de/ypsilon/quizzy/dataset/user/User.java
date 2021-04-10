@@ -6,6 +6,7 @@ import de.ypsilon.quizzy.database.DatabaseManager;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
 import de.ypsilon.quizzy.exception.UserCreationException;
 import de.ypsilon.quizzy.util.CryptoUtil;
+import de.ypsilon.quizzy.util.DatabaseUtil;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -101,7 +102,7 @@ public class User {
      * @return the user with the display-name or null
      */
     public static User getUserByDisplayName(String displayName) {
-        return getCollection().find(new Document(UserCodec.DISPLAY_NAME_KEY, displayName), User.class).first();
+        return getCollection().find(DatabaseUtil.buildEqualsIgnoreSearch(UserCodec.DISPLAY_NAME_KEY, displayName), User.class).first();
     }
 
     /**
@@ -111,7 +112,7 @@ public class User {
      * @return the user with the email or null
      */
     public static User getUserByEmail(String email) {
-        return getCollection().find(new Document(UserCodec.EMAIL_KEY, email), User.class).first();
+        return getCollection().find(DatabaseUtil.buildEqualsIgnoreSearch(UserCodec.EMAIL_KEY, email), User.class).first();
     }
 
     /**

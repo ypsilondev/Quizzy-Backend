@@ -33,5 +33,6 @@ public class RegisterUserRoute implements Route {
         User user = User.createAndStoreUser(displayName, email, cleartextPassword, new ObjectId(profileImageId));
         AuthenticateUserRoute.setSessionToken(context, user);
         RouteUtil.sendSuccessMessage(context);
+        context.status(201);
     }
 }

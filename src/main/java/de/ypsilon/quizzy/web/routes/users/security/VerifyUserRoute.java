@@ -16,14 +16,13 @@ public class VerifyUserRoute implements Route {
 
     @Override
     public HandlerType getType() {
-        return HandlerType.POST;
+        return HandlerType.GET;
     }
 
     @Override
     public void handle(@NotNull Context context) throws Exception {
         User user = RouteUtil.requireAuthenticatedUser(context);
-
-        String verificationNumberString = context.formParam("verificationNumber");
+        String verificationNumberString = context.queryParam("verificationNumber");
         RouteUtil.requireAllNotNull(verificationNumberString);
         int verificationNumber = RouteUtil.getInt(verificationNumberString);
 
