@@ -5,6 +5,8 @@ import de.ypsilon.quizzy.exception.QuizzyWebException;
 import de.ypsilon.quizzy.util.EnvironmentVariablesUtil;
 import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.routes.dev.DevRoute;
+import de.ypsilon.quizzy.web.routes.match.CreateMatchRoute;
+import de.ypsilon.quizzy.web.routes.match.RetrieveCurrentMatchQuestionRoute;
 import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
 import de.ypsilon.quizzy.web.routes.users.AuthenticateUserRoute;
 import de.ypsilon.quizzy.web.routes.users.LoginCheckRoute;
@@ -13,6 +15,7 @@ import de.ypsilon.quizzy.web.routes.users.security.RevokeAllTokensRoute;
 import de.ypsilon.quizzy.web.routes.users.security.RevokeTokenRoute;
 import de.ypsilon.quizzy.web.routes.users.security.VerifyUserRoute;
 import io.javalin.Javalin;
+import org.json.JSONException;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -39,6 +42,9 @@ public class WebManager {
         this.application.exception(QuizzyWebException.class, (e, context) ->
                 RouteUtil.failRequest(context, e.getMessage())
         );
+        this.application.exception(JSONException.class, (e, context) ->
+                RouteUtil.failRequest(context, e.getMessage())
+        );
     }
 
     /**
@@ -62,6 +68,10 @@ public class WebManager {
         // DEV-ROUTES, only for debugging-use
         // /dev
         routes.add(new DevRoute());
+
+        // /match
+        routes.add(new CreateMatchRoute());
+        routes.add(new RetrieveCurrentMatchQuestionRoute());
 
         // /questions
         routes.add(new AddQuestionRoute());

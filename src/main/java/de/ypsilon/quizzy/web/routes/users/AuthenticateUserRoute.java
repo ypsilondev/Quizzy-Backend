@@ -8,6 +8,7 @@ import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 public class AuthenticateUserRoute implements Route {
 
@@ -26,12 +27,20 @@ public class AuthenticateUserRoute implements Route {
 
     @Override
     public void handle(@NotNull Context context) throws Exception {
-        String displayName = context.formParam("displayName");
-        String email = context.formParam("email");
-        String cleartextPassword = context.formParam("password");
+        JSONObject json = new JSONObject(context.body());
 
-        RouteUtil.requireAllNotNull(cleartextPassword);
+        String displayName = null;
+        String email = null;
 
+        if (!json.isNull("displayName")) {
+            displayName = json.getString("displayName");
+        }
+
+        if (!json.isNull("email")) {
+            email = json.getString("email");
+        }
+
+        String cleartextPassword = json.getString("password");
 
         User user = null;
         if (displayName != null) {
@@ -39,10 +48,7 @@ public class AuthenticateUserRoute implements Route {
         } else if (email != null) {
             user = User.getUserByEmail(email);
         }
-        if (user == null) {
-            throw new UserAuthenticationException("Invalid credentials!");
-        }
-        if (user.isValidPassword(cleartextPassword)) {
+        if (user != null && user.isValidPassword(cleartextPassword)) {
             RouteUtil.sendJsonMessage(context, String.format(RouteUtil.STATE_JSON, "state", "login"));
             setSessionToken(context, user);
         } else {

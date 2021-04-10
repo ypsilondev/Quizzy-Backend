@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 public class RegisterUserRoute implements Route {
 
@@ -22,12 +23,13 @@ public class RegisterUserRoute implements Route {
 
     @Override
     public void handle(@NotNull Context context) throws Exception {
-        String displayName = context.formParam("displayName");
-        String email = context.formParam("email");
-        String cleartextPassword = context.formParam("password");
-        String profileImageId = context.formParam("profileImage");
+        JSONObject json = new JSONObject(context.body());
 
-        RouteUtil.requireAllNotNull(displayName, email, cleartextPassword, profileImageId);
+        String displayName = json.getString("displayName");
+        String email = json.getString("email");
+        String cleartextPassword = json.getString("password");
+        String profileImageId = json.getString("profileImage");
+
         User user = User.createAndStoreUser(displayName, email, cleartextPassword, new ObjectId(profileImageId));
         AuthenticateUserRoute.setSessionToken(context, user);
         RouteUtil.sendSuccessMessage(context);

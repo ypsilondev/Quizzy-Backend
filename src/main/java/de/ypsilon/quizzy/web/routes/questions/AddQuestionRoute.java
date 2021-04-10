@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +26,23 @@ public class AddQuestionRoute implements Route {
 
     @Override
     public void handle(@NotNull Context context) throws Exception {
-        String questionCategoryId = context.formParam("questionCategory");
-        String questionString = context.formParam("question");
-        String correctAnswer = context.formParam("correctAnswer");
-        List<String> wrongAnswers = context.formParams("wrongAnswers");
-        List<String> imagesIds = context.formParams("images");
-        String timeToAnswerString = context.formParam("timeToAnswer", "-1");
+        JSONObject json = new JSONObject(context.body());
+
+
+        String questionCategoryId = json.getString("questionCategory");
+        String questionString = json.getString("question");
+        String correctAnswer = json.getString("correctAnswer");
+
+        List<String> wrongAnswers = new ArrayList<>();
+        json.getJSONArray("wrongAnswers").forEach(wrongAnswer->wrongAnswers.add((String) wrongAnswer));
+
+        List<String> imagesIds = new ArrayList<>();
+        json.getJSONArray("images").forEach(image->wrongAnswers.add((String) image));
+
+        String timeToAnswerString = "-1";
+        if (!json.isNull("timeToAnswer")) {
+            timeToAnswerString = json.getString("timeToAnswer");
+        }
 
         RouteUtil.requireAllNotNull(questionCategoryId, questionString, correctAnswer, wrongAnswers, imagesIds);
         ObjectId questionCategory = new ObjectId(questionCategoryId);
