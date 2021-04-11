@@ -3,6 +3,7 @@ package de.ypsilon.quizzy.web.routes.users;
 import de.ypsilon.quizzy.dataset.user.SessionToken;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.exception.UserAuthenticationException;
+import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
@@ -29,27 +30,18 @@ public class AuthenticateUserRoute implements Route {
     public void handle(@NotNull Context context) throws Exception {
         JSONObject json = new JSONObject(context.body());
 
-        String displayName = null;
-        String email = null;
-
-        if (!json.isNull("displayName")) {
-            displayName = json.getString("displayName");
-        }
-
-        if (!json.isNull("email")) {
-            email = json.getString("email");
-        }
-
+        String loginName = json.getString("loginName");
         String cleartextPassword = json.getString("password");
 
-        User user = null;
-        if (displayName != null) {
-            user = User.getUserByDisplayName(displayName);
-        } else if (email != null) {
-            user = User.getUserByEmail(email);
+        User user = User.getUserByDisplayName(loginName);
+        if (user == null) {
+            user = User.getUserByEmail(loginName);
         }
         if (user != null && user.isValidPassword(cleartextPassword)) {
-            RouteUtil.sendJsonMessage(context, String.format(RouteUtil.STATE_JSON, "state", "login"));
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("state", "login");
+            responseJson.put("user", JsonCodecManager.getInstance().getEncoder(User.class).encode(user));
+            RouteUtil.sendJsonMessage(context, responseJson.toString());
             setSessionToken(context, user);
         } else {
             throw new UserAuthenticationException("Invalid credentials!");
