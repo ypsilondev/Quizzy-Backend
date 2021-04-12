@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(ApiEndpointRequestParameters.class)
-public @interface ApiRequestParameter {
+public @interface ApiEndpointRequestParameter {
     String parameterName();
     Class<?> parameterType();
     String exampleValue();

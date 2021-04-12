@@ -5,5 +5,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiEndpointRequestParameters {
-    ApiRequestParameter[] value();
+    ApiEndpointRequestParameter[] value();
 }

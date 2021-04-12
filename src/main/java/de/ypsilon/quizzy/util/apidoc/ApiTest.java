@@ -15,9 +15,12 @@ public class ApiTest {
         StringBuilder out = new StringBuilder();
 
         QuizzyBackend.getQuizzyBackend().getWebManager().getRoutes().forEach(route -> {
-            out.append(new ApiEndpointDocumentation(route.getClass()).getDocumentation());
+            String doc =new ApiEndpointDocumentation(route.getClass()).getDocumentation();
+            out.append(doc);
         });
 
-        return out.toString();
+        return String.format(ApiEndpointDocumentation.HALFMOON_PAGE, out.toString());
+
+        // return out.toString();
     }
 }
