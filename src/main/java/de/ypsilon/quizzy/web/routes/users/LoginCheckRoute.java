@@ -1,11 +1,13 @@
 package de.ypsilon.quizzy.web.routes.users;
 
+import com.shirkanesi.apidoc.ApiEndpointHandler;
+import com.shirkanesi.apidoc.ApiEndpointRequestParameter;
+import com.shirkanesi.apidoc.ApiEndpointResponse;
+import com.shirkanesi.apidoc.ApiResponses;
+import com.shirkanesi.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.util.RouteUtil;
-import de.ypsilon.quizzy.util.apidoc.ApiEndpointResponse;
-import de.ypsilon.quizzy.util.apidoc.ApiResponses;
-import de.ypsilon.quizzy.util.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -25,6 +27,7 @@ public class LoginCheckRoute implements Route {
         return HandlerType.GET;
     }
 
+    @ApiEndpointHandler
     @ApiEndpointResponse(statusCode = 200, description = "User is authenticated. The user is sent back.", body = ApiResponses.LOGGED_IN_USER)
     @ApiEndpointResponse(statusCode = 400, description = "User is not authenticated (cause in response)", body = ApiResponses.FAIL_RESPONSE)
     @Override

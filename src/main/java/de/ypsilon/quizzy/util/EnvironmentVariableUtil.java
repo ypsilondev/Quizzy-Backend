@@ -6,16 +6,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class EnvironmentVariablesUtil {
+public class EnvironmentVariableUtil {
 
-    private static EnvironmentVariablesUtil instance;
+    private static EnvironmentVariableUtil instance;
 
     private static final HashMap<String, String> variables = new HashMap<>();
 
     /**
-     * Creates a new instance of the {@link EnvironmentVariablesUtil}, saves it as instance, if called the first time
+     * Creates a new instance of the {@link EnvironmentVariableUtil}, saves it as instance, if called the first time
      */
-    public EnvironmentVariablesUtil() {
+    public EnvironmentVariableUtil() {
         if (instance == null) {
             instance = this;
         }
@@ -56,11 +56,11 @@ public class EnvironmentVariablesUtil {
     }
 
     /**
-     * Gets the {@link EnvironmentVariablesUtil} instance
+     * Gets the {@link EnvironmentVariableUtil} instance
      *
      * @return the instance
      */
-    public static EnvironmentVariablesUtil getInstance() {
+    public static EnvironmentVariableUtil getInstance() {
         return instance;
     }
 }

@@ -1,13 +1,14 @@
 package de.ypsilon.quizzy.web.routes.users.security;
 
+import com.shirkanesi.apidoc.ApiEndpointHandler;
+import com.shirkanesi.apidoc.ApiEndpointRequestParameter;
+import com.shirkanesi.apidoc.ApiEndpointResponse;
+import com.shirkanesi.apidoc.ApiRequestRequirement;
+import com.shirkanesi.apidoc.ApiResponses;
+import com.shirkanesi.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.dataset.user.VerificationCode;
 import de.ypsilon.quizzy.util.RouteUtil;
-import de.ypsilon.quizzy.util.apidoc.ApiEndpointRequestParameter;
-import de.ypsilon.quizzy.util.apidoc.ApiRequestRequirement;
-import de.ypsilon.quizzy.util.apidoc.ApiEndpointResponse;
-import de.ypsilon.quizzy.util.apidoc.ApiResponses;
-import de.ypsilon.quizzy.util.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -25,6 +26,7 @@ public class VerifyUserRoute implements Route {
         return HandlerType.GET;
     }
 
+    @ApiEndpointHandler
     @ApiRequestRequirement(requirement = "Valid session_token")
     @ApiEndpointRequestParameter(parameterName = "verificationNumber", description = "The verification-code the user got in the email", exampleValue = "123456", parameterType = Integer.class)
     @ApiEndpointResponse(statusCode = 200, description = "The new user was verified successfully", body = ApiResponses.SUCCESS_RESPONSE)

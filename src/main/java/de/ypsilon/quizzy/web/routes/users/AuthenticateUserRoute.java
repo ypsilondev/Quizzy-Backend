@@ -1,14 +1,15 @@
 package de.ypsilon.quizzy.web.routes.users;
 
+import com.shirkanesi.apidoc.ApiEndpointHandler;
+import com.shirkanesi.apidoc.ApiEndpointRequestParameter;
+import com.shirkanesi.apidoc.ApiEndpointResponse;
+import com.shirkanesi.apidoc.ApiResponses;
+import com.shirkanesi.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.dataset.user.SessionToken;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.exception.UserAuthenticationException;
 import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.util.RouteUtil;
-import de.ypsilon.quizzy.util.apidoc.ApiEndpointRequestParameter;
-import de.ypsilon.quizzy.util.apidoc.ApiEndpointResponse;
-import de.ypsilon.quizzy.util.apidoc.ApiResponses;
-import de.ypsilon.quizzy.util.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.web.Route;
 import io.javalin.http.Context;
 import io.javalin.http.HandlerType;
@@ -30,9 +31,9 @@ public class AuthenticateUserRoute implements Route {
         return HandlerType.POST;
     }
 
+    @ApiEndpointHandler
     @ApiEndpointRequestParameter(parameterName = "loginName", description = "The login-name of the user, either displayName or email. Lower/Upper-case ignored.", exampleValue = "shirkanesi", parameterType = String.class)
     @ApiEndpointRequestParameter(parameterName = "password", description = "The user's password (in plaintext, SSL/TLS does provide the security)", exampleValue = "someP4ssw0rd", parameterType = String.class)
-
     @ApiEndpointResponse(statusCode = 200, description = "The new user was authenticated successfully", body = ApiResponses.LOGIN_SUCCESSFUL)
     @ApiEndpointResponse(statusCode = 400, description = "An error occurred while authenticated user (cause in response)", body = ApiResponses.FAIL_RESPONSE)
     @Override
