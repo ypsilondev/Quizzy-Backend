@@ -1,5 +1,10 @@
 package de.ypsilon.quizzy.web.routes.users;
 
+import com.shirkanesi.apidoc.ApiEndpointHandler;
+import com.shirkanesi.apidoc.ApiEndpointRequestParameter;
+import com.shirkanesi.apidoc.ApiEndpointResponse;
+import com.shirkanesi.apidoc.ApiResponses;
+import com.shirkanesi.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.util.RouteUtil;
@@ -9,6 +14,7 @@ import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+@DocumentedApiEndpoint(name = "Login-Test", description = "Tests, whether the user is authenticated in the system")
 public class LoginCheckRoute implements Route {
 
     @Override
@@ -21,6 +27,9 @@ public class LoginCheckRoute implements Route {
         return HandlerType.GET;
     }
 
+    @ApiEndpointHandler
+    @ApiEndpointResponse(statusCode = 200, description = "User is authenticated. The user is sent back.", body = ApiResponses.LOGGED_IN_USER)
+    @ApiEndpointResponse(statusCode = 400, description = "User is not authenticated (cause in response)", body = ApiResponses.FAIL_RESPONSE)
     @Override
     public void handle(@NotNull Context context) throws Exception {
         User user = RouteUtil.requireAuthenticatedUser(context);

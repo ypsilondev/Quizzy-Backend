@@ -126,6 +126,19 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
         </dependency>
+        <!-- Api-Doc-Tool -->
+        <dependency>
+            <groupId>com.github.Shirkanesi</groupId>
+            <artifactId>ApiEndpointDocumentation</artifactId>
+            <version>0.0.5</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>

@@ -7,6 +7,7 @@ import de.ypsilon.quizzy.exception.QuizzyWebIllegalArgumentException;
 import de.ypsilon.quizzy.exception.UserAuthenticationException;
 import de.ypsilon.quizzy.web.routes.users.AuthenticateUserRoute;
 import io.javalin.http.Context;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -38,7 +39,10 @@ public class RouteUtil {
      * @param context the context of the request
      */
     public static void failRequest(Context context) {
-        context.html(ERROR_IN_REQUEST);
+        JSONObject json = new JSONObject();
+        json.put("state", "fail");
+        json.put("cause", ERROR_IN_REQUEST);
+        sendJsonMessage(context, json);
         context.status(400);
     }
 
@@ -73,6 +77,10 @@ public class RouteUtil {
     public static void sendJsonMessage(Context context, String jsonString) {
         context.html(jsonString);
         context.contentType("application/json");
+    }
+
+    public static void sendJsonMessage(Context context, JSONObject json) {
+        sendJsonMessage(context, json.toString());
     }
 
     /**

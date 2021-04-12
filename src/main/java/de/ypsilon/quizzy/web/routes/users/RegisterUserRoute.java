@@ -1,5 +1,10 @@
 package de.ypsilon.quizzy.web.routes.users;
 
+import com.shirkanesi.apidoc.ApiEndpointHandler;
+import com.shirkanesi.apidoc.ApiEndpointRequestParameter;
+import com.shirkanesi.apidoc.ApiEndpointResponse;
+import com.shirkanesi.apidoc.ApiResponses;
+import com.shirkanesi.apidoc.DocumentedApiEndpoint;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.Route;
@@ -9,6 +14,7 @@ import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+@DocumentedApiEndpoint(name = "Create User", description = "Creates a new user in the system")
 public class RegisterUserRoute implements Route {
 
     @Override
@@ -21,6 +27,13 @@ public class RegisterUserRoute implements Route {
         return HandlerType.POST;
     }
 
+    @ApiEndpointHandler
+    @ApiEndpointRequestParameter(parameterName = "displayName", exampleValue = "SomeUsername", description = "The username of the user", parameterType = String.class)
+    @ApiEndpointRequestParameter(parameterName = "email", exampleValue = "someone@example.com", description = "The email of the user", parameterType = String.class)
+    @ApiEndpointRequestParameter(parameterName = "password", exampleValue = "SuperSecurePassword", description = "The password of the user (in cleartext)", parameterType = String.class)
+    @ApiEndpointRequestParameter(parameterName = "profileImage", exampleValue = "606f801770402029ae887153", description = "The file-id of the user image (upload in future api-version)", parameterType = String.class)
+    @ApiEndpointResponse(statusCode = 201, description = "The new user was created successfully", body = ApiResponses.SUCCESS_RESPONSE)
+    @ApiEndpointResponse(statusCode = 400, description = "An error occurred while creating user (cause in response)", body = ApiResponses.FAIL_RESPONSE)
     @Override
     public void handle(@NotNull Context context) throws Exception {
         JSONObject json = new JSONObject(context.body());

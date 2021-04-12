@@ -11,7 +11,7 @@ import de.ypsilon.quizzy.database.codecs.QuestionCodec;
 import de.ypsilon.quizzy.database.codecs.SessionTokenCodec;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
 import de.ypsilon.quizzy.database.codecs.VerificationCodeCodec;
-import de.ypsilon.quizzy.util.EnvironmentVariablesUtil;
+import de.ypsilon.quizzy.util.EnvironmentVariableUtil;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -36,7 +36,7 @@ public class DatabaseManager {
      */
     public DatabaseManager() {
         // get all required env variables
-        EnvironmentVariablesUtil evw = EnvironmentVariablesUtil.getInstance();
+        EnvironmentVariableUtil evw = EnvironmentVariableUtil.getInstance();
         String hostName = evw.getenv("mongo.host");
         int port = Integer.parseInt(evw.getenv("mongo.port"));
 

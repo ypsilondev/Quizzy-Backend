@@ -2,9 +2,10 @@ package de.ypsilon.quizzy.web;
 
 import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.exception.QuizzyWebException;
-import de.ypsilon.quizzy.util.EnvironmentVariablesUtil;
+import de.ypsilon.quizzy.util.EnvironmentVariableUtil;
 import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.routes.dev.DevRoute;
+import de.ypsilon.quizzy.web.routes.dev.DocRoute;
 import de.ypsilon.quizzy.web.routes.match.CreateMatchRoute;
 import de.ypsilon.quizzy.web.routes.match.RetrieveCurrentMatchQuestionRoute;
 import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
@@ -27,7 +28,7 @@ public class WebManager {
     private final Javalin application;
 
     public WebManager() {
-        EnvironmentVariablesUtil evw = EnvironmentVariablesUtil.getInstance();
+        EnvironmentVariableUtil evw = EnvironmentVariableUtil.getInstance();
         this.port = Integer.parseInt(evw.getenv("web.port"));
 
         // initialize JavaLin
@@ -62,12 +63,13 @@ public class WebManager {
      *
      * @return a list with all routes.
      */
-    private Collection<Route> getRoutes() {
+    public Collection<Route> getRoutes() {
         List<Route> routes = new LinkedList<>();
 
         // DEV-ROUTES, only for debugging-use
         // /dev
         routes.add(new DevRoute());
+        routes.add(new DocRoute());
 
         // /match
         routes.add(new CreateMatchRoute());
