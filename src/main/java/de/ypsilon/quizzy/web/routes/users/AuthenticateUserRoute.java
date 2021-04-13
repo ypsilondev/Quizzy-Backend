@@ -10,6 +10,8 @@ import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import javax.servlet.http.Cookie;
+
 public class AuthenticateUserRoute implements Route {
 
     public static final String SESSION_TOKEN_COOKIE_NAME = "session_token";
@@ -58,6 +60,9 @@ public class AuthenticateUserRoute implements Route {
     }
 
     static void setSessionToken(Context context, User user) {
-        context.cookie(SESSION_TOKEN_COOKIE_NAME, SessionToken.createAndSaveSessionToken(user).getTokenString(), 1717917367);
+        Cookie cookie = new Cookie(SESSION_TOKEN_COOKIE_NAME, SessionToken.createAndSaveSessionToken(user).getTokenString());
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(1717917367);
+        context.cookie(cookie);
     }
 }
