@@ -2,6 +2,7 @@ package de.ypsilon.quizzy;
 
 import de.ypsilon.quizzy.data.MinioManager;
 import de.ypsilon.quizzy.database.DatabaseManager;
+import de.ypsilon.quizzy.dataset.MatchManager;
 import de.ypsilon.quizzy.dataset.question.QuestionController;
 import de.ypsilon.quizzy.json.JsonCodecManager;
 import de.ypsilon.quizzy.web.WebManager;
@@ -20,6 +21,8 @@ public class QuizzyBackend {
     private MinioManager minioManager;
     private JsonCodecManager jsonCodecManager;
 
+    private MatchManager matchManager;
+
     public QuizzyBackend() {
         quizzyBackend = this;
     }
@@ -37,6 +40,7 @@ public class QuizzyBackend {
         this.databaseManager = new DatabaseManager();
         // this.minioManager = new MinioManager();
         this.webmanager = new WebManager();
+        this.matchManager = new MatchManager();
         new QuestionController();
     }
 
@@ -56,4 +60,7 @@ public class QuizzyBackend {
         return jsonCodecManager;
     }
 
+    public MatchManager getMatchManager() {
+        return matchManager;
+    }
 }

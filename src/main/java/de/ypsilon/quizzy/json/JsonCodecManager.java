@@ -1,6 +1,7 @@
 package de.ypsilon.quizzy.json;
 
 import de.ypsilon.quizzy.QuizzyBackend;
+import de.ypsilon.quizzy.json.encoders.MatchJsonEncoder;
 import de.ypsilon.quizzy.json.encoders.QuestionJsonEncoder;
 import de.ypsilon.quizzy.json.encoders.ServableQuestionJsonEncoder;
 import de.ypsilon.quizzy.json.encoders.UserJsonEncoder;
@@ -62,6 +63,7 @@ public class JsonCodecManager {
     private Collection<JsonEncoder<?>> getEncoders() {
         Collection<JsonEncoder<?>> encoders = new LinkedList<>();
 
+        encoders.add(new MatchJsonEncoder());
         encoders.add(new QuestionJsonEncoder());
         encoders.add(new ServableQuestionJsonEncoder());
         encoders.add(new UserJsonEncoder());

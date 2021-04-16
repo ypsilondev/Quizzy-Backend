@@ -4,11 +4,13 @@ import com.mongodb.client.MongoCollection;
 import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.database.DatabaseManager;
 import de.ypsilon.quizzy.database.codecs.UserCodec;
+import de.ypsilon.quizzy.dataset.Match;
 import de.ypsilon.quizzy.exception.UserCreationException;
 import de.ypsilon.quizzy.util.CryptoUtil;
 import de.ypsilon.quizzy.util.DatabaseUtil;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -299,5 +301,9 @@ public class User {
 
     public int getAccountSettings() {
         return accountSettings;
+    }
+
+    public JSONObject asJson() {
+        return QuizzyBackend.getQuizzyBackend().getJsonCodecManager().getEncoder(User.class).encode(this);
     }
 }

@@ -61,4 +61,8 @@ public class ServableQuestion {
     public Question getQuestion() {
         return question;
     }
+
+    public int getCorrectAnswerId() {
+        return correctAnswerId;
+    }
 }
