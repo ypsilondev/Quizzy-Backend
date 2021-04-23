@@ -7,7 +7,9 @@ import de.ypsilon.quizzy.util.RouteUtil;
 import de.ypsilon.quizzy.web.routes.dev.DevRoute;
 import de.ypsilon.quizzy.web.routes.dev.DocRoute;
 import de.ypsilon.quizzy.web.routes.match.CreateMatchRoute;
+import de.ypsilon.quizzy.web.routes.match.GetQuestionRoute;
 import de.ypsilon.quizzy.web.routes.match.RetrieveCurrentMatchQuestionRoute;
+import de.ypsilon.quizzy.web.routes.match.SubmitQuestionAnswerRoute;
 import de.ypsilon.quizzy.web.routes.questions.AddQuestionRoute;
 import de.ypsilon.quizzy.web.routes.users.AuthenticateUserRoute;
 import de.ypsilon.quizzy.web.routes.users.LoginCheckRoute;
@@ -73,7 +75,9 @@ public class WebManager {
 
         // /match
         routes.add(new CreateMatchRoute());
+        routes.add(new GetQuestionRoute());
         routes.add(new RetrieveCurrentMatchQuestionRoute());
+        routes.add(new SubmitQuestionAnswerRoute());
 
         // /questions
         routes.add(new AddQuestionRoute());

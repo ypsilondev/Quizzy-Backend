@@ -25,15 +25,15 @@ public class Match {
     private static final int POINTS_PER_WIN = 1;
 
     private QuestionCategory questionCategory;
-    private UUID matchId;
+    private final UUID matchId;
 
-    private HashMap<User, Integer> questionIndex;
-    private HashMap<User, ServableQuestion> servedQuestions;
     private List<Question> questions;
+    private final HashMap<User, Integer> questionIndex;
+    private final HashMap<User, ServableQuestion> servedQuestions;
 
+    private final HashMap<User, Integer> scores;
     private Set<User> participatingUsers;
 
-    private HashMap<User, Integer> scores;
 
     public Match() {
         this.matchId = UUID.randomUUID();
@@ -45,7 +45,10 @@ public class Match {
         QuizzyBackend.getQuizzyBackend().getMatchManager().addMatch(this);
     }
 
-    public void addUser(User user) {
+    public void addUser(User user) throws QuizzyExcepton {
+        if(this.participatingUsers.contains(user)) {
+           throw new QuizzyExcepton("User is already participant of this match!");
+        }
         if (this.participatingUsers.size() < MAX_PLAYER_COUNT) {
             if (this.participatingUsers.add(user)) {
                 this.questionIndex.put(user, 0);
@@ -82,15 +85,14 @@ public class Match {
         }
     }
 
-    public boolean submitQuestion(User user, int answerId) throws QuizzyExcepton {
+    public boolean submitAnswer(User user, int answerId) throws QuizzyExcepton {
         ServableQuestion servedQuestion = this.serveCurrentQuestion(user);
         this.questionIndex.merge(user, 1, Integer::sum);
-        if (servedQuestion.getCorrectAnswerId() == answerId) {
+        if (servedQuestion.answer(answerId)) {
             this.addScore(user, POINTS_PER_WIN);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private void addScore(User user, int amount) {

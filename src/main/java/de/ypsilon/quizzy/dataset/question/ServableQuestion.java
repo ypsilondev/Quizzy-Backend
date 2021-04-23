@@ -1,5 +1,10 @@
 package de.ypsilon.quizzy.dataset.question;
 
+import de.ypsilon.quizzy.QuizzyBackend;
+import de.ypsilon.quizzy.dataset.Match;
+import de.ypsilon.quizzy.exception.QuizzyExcepton;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,20 +21,24 @@ public class ServableQuestion {
     private final UUID referenceId;
     private final Question question;
     private final int correctAnswerId;
+    private boolean answered;
 
     /**
      * Creates a servable question
+     *
      * @param question the question to be served
      */
     public ServableQuestion(Question question) {
         this.referenceId = UUID.randomUUID();
         this.question = question;
         this.correctAnswerId = random.nextInt(Question.ANSWER_COUNT);
+        this.answered = false;
     }
 
     /**
      * Creates an answer-list in a (pseudo-)random order. However this order is defined since the constructor was called
      * so this function will always return the same {@link Collection} when called on the same object.
+     *
      * @return a {@link Collection} containing all answers.
      */
     public Collection<String> getAnswerList() {
@@ -48,6 +57,7 @@ public class ServableQuestion {
 
     /**
      * Getter for the {@link UUID} of this {@link ServableQuestion}
+     *
      * @return the {@link UUID}
      */
     public UUID getReferenceId() {
@@ -56,6 +66,7 @@ public class ServableQuestion {
 
     /**
      * Getter for the question being served.
+     *
      * @return the served question
      */
     public Question getQuestion() {
@@ -65,4 +76,17 @@ public class ServableQuestion {
     public int getCorrectAnswerId() {
         return correctAnswerId;
     }
+
+    public JSONObject asJson() {
+        return QuizzyBackend.getQuizzyBackend().getJsonCodecManager().getEncoder(ServableQuestion.class).encode(this);
+    }
+
+    public boolean answer(int answerId) throws QuizzyExcepton {
+        if (this.answered) {
+            throw new QuizzyExcepton("This question was already answered!");
+        }
+        this.answered = true;
+        return this.correctAnswerId == answerId;
+    }
+
 }

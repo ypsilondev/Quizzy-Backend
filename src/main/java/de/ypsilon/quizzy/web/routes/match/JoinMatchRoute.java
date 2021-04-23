@@ -1,10 +1,7 @@
 package de.ypsilon.quizzy.web.routes.match;
 
 import com.shirkanesi.apidoc.ApiEndpointHandler;
-import com.shirkanesi.apidoc.ApiEndpointResponse;
-import com.shirkanesi.apidoc.ApiRequestRequirement;
-import com.shirkanesi.apidoc.ApiResponses;
-import com.shirkanesi.apidoc.DocumentedApiEndpoint;
+import de.ypsilon.quizzy.QuizzyBackend;
 import de.ypsilon.quizzy.dataset.Match;
 import de.ypsilon.quizzy.dataset.user.User;
 import de.ypsilon.quizzy.util.RouteUtil;
@@ -14,12 +11,12 @@ import io.javalin.http.HandlerType;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-@DocumentedApiEndpoint(name = "Create match", description = "Creates a new match between players")
-public class CreateMatchRoute implements Route {
+import java.util.UUID;
 
+public class JoinMatchRoute implements Route {
     @Override
     public String getPath() {
-        return "/match/create";
+        return "/match/join";
     }
 
     @Override
@@ -27,14 +24,15 @@ public class CreateMatchRoute implements Route {
         return HandlerType.GET;
     }
 
-
     @ApiEndpointHandler
-    @ApiRequestRequirement(requirement = "Authenticated user")
-    @ApiEndpointResponse(statusCode = 200, description = "Match was created successfully", body = ApiResponses.SUCCESS_RESPONSE)
     @Override
     public void handle(@NotNull Context context) throws Exception {
         User user = RouteUtil.requireAuthenticatedUser(context);
-        Match match = new Match();
+        JSONObject json = new JSONObject(context.body());
+        String matchId = json.getString("matchId");
+
+        Match match = QuizzyBackend.getQuizzyBackend().getMatchManager().getMatchById(UUID.fromString(matchId));
+
         match.addUser(user);
 
         JSONObject responseJson = new JSONObject();
